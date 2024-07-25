@@ -1,3 +1,26 @@
 body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: #aaa;
+}
+
+#box {
+    height: 500px;
+    width: 500px;
+    background-color: white;
+    display: grid;
+    grid-template-rows: repeat(3 , calc(500px / 3));
+    grid-template-columns:repeat(3 , calc(500px / 3));
+    border: 5px solid black;
+    padding: 3px;
+}
+
+.cell{
+    font-size: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid grey;
+    margin: 2px;
 }

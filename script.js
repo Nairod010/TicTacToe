@@ -1,125 +1,107 @@
-(function() {
-    const gameboard = (() => {
-        const board = []
-        for (let i = 1; i <= 3; i++) {
-            for (let j = 1; j <= 3; j++) {
-                board.push(cell(i, j))
-            }
-        }
-        return board
-    })();
-    
-    console.log(gameboard) 
-
-    const createDom = (() => {
-        
-
-
-    })();
-
-    function cell(row, col) {
-        return {
-            row: row,
-            col: col,
-            value: "",
-            getValue: function() {
-                console.log(this.value)
-            },
-            setValue: function(newValue) {
-                if (this.value != "") {
-                    console.log("spot used")
-                } else {
-                    this.value = newValue
+function gameboard() {
+    return {
+        board: [],
+        cell: function(index) {
+            return {
+                index: index,
+                value: "",
+                getValue: function() {
+                    return this.value;
+                },
+                setValue: function(newValue) {
+                    console.log(this.value);
+                    this.value = newValue;
+                    console.log(this.value);
                 }
             }
-        }
-    }
-
-    function game() {
-        return {
-            gameCounter: 0,
-            winConditions: function(check) {
-                let result = ""
-                for (let i = 1; i <= 3; i++) {
-                    let row = gameboard.filter(board => board.row === i && board.value == check)
-                    let col = gameboard.filter(board => board.col === i && board.value == check)
-                    if (row.length === 3 || col.length === 3) {
-                        result = "Game Over"
-                        break
-                    } else {
-                        result = "Game Running"
-                    }
-
+        },
+        makeBoard: function() {
+            let index = 0;
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++) {
+                    this.board.push(this.cell(index));
+                    index += 1;
                 }
-                
-                const d1 = gameboard.filter(board => board.row === board.col && board.value == check)
-                const d2 = gameboard.filter(board => board.row + board.col === 4 && board.value == check)
-                if (d1.length === 3) {
-                    result = "Game Over"
-                } else if (d2.length === 3) {
-                    result = "Game Over"
-                }
-                if (result == "Game Over") {
-                    player1.turn = 1
-                    player2.turn = 2
-                    this.gameCounter++
-                    gameboard.filter(board => board.value = "")
-                }
-                return result
-            },
-            getCounter: function() {
-                console.log(this.gameCounter)
             }
+        },
+        setCellValue: function(index, value) {
+            this.board[index].setValue(value);
+            console.log(this.board[index]);
+        },
+        getCellValue: function(index) {
+            this.board[index].getValue();
+        },
+        getAllValues: function() {
+            const firstRow = this.board.slice(0,3)  
+            const secondRow = this.board.slice(3,6)
+            const thirdRow = this.board.slice(6,9)
+            return thirdRow 
         }
     }
+}
 
-
-    function player(name, turn, weapon) {
-        return {
-            name: name,
-            turn: turn,
-            weapon: weapon,
-            wins: 0,
-            useWeapon: function(spot) {
-                const turnCheck = gameboard.filter(board => board.value != "")
-                console.log(turnCheck)
-                if (turnCheck.length + 1 == this.turn) {
-                    if (gameboard[spot].value == "") {
-                        this.turn += 2
-                    }
-                    gameboard[spot].setValue(weapon)
-                    if (startGame.winConditions(weapon) === "Game Over") {
-                        console.log(`${this.name} WINS THE GAME!!!`);
-                        this.wins++
-                        return true
-                    } else {
-                        return false
-                    }
-                } else {
-                    console.log("not your turn")
-                }
-            },
-            getWins: function() {
-                console.log(this.wins)
-            },
+function player(name, pick) {
+    return {
+        name: name,
+        pick: pick,
+        win: 0,
+        setWin: function() {
+            this.win += 1
+        },
+        getWins: function() {
+            return this.win
+        },
+        getPick: function() {
+            return this.pick
         }
     }
+}
 
+function game() {
+    return {
+        counter: 0,
+        turn: 1,
+        nextTurn: function() {
+            this.turn += 1
+        },
+        resetTurn: function() {
+            this.turn = 0
+        }
+    }
+}
 
-    const startGame = (() => {
-        const initGame = game()
-        return initGame
-    })();
+const runGame = (() => {
+    const session = game()
+    const controller = gameboard()
+    controller.makeBoard()
+    const player1 = player("player1", "X")
+    const player2 = player("player2", "O")
 
-    const player1 = player("jon", 1, "X");
-    const player2 = player("jonny", 2, "O");
+    const playTurn = function(index) {
+        if (session.turn % 2 !== 0 && controller.getCellValue(index) !== "") {
+            controller.setCellValue(index, player1.getPick())
+            session.nextTurn()
+        } else if (session.turn % 2 === 0 && controller.getCellValue(index) !== "") {
+            controller.setCellValue(index, player2.getPick())
+            session.nextTurn()
+        } else {
+            console.log("not your turn")
+        }
+        console.log(controller.board)
+    }
 
-    player1.useWeapon(0)
-    player2.useWeapon(3)
-    player1.useWeapon(1)
-    player2.useWeapon(4)
-    player1.useWeapon(2)
+    const decideGame = function() {
+        console.log(controller.getAllValues())
+    }
+
+    return {
+        playTurn,
+        decideGame
+    }
 })();
 
 
+runGame.playTurn(0)
+runGame.playTurn(5)
+runGame.decideGame()
 
