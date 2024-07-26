@@ -31,11 +31,46 @@ function gameboard() {
         getCellValue: function(index) {
             this.board[index].getValue();
         },
-        getAllValues: function() {
-            const firstRow = this.board.slice(0,3)  
-            const secondRow = this.board.slice(3,6)
-            const thirdRow = this.board.slice(6,9)
-            return thirdRow 
+        getRows: function(num) {
+            if (num === 1) {
+                return this.board.slice(0, 3).filter(board => board.value !== "")
+            } else if (num === 2) {
+                return this.board.slice(3, 6).filter(board => board.value !== "")
+            } else if (num === 3) {
+                return this.board.slice(6, 9).filter(board => board.value !== "")
+            };
+        },
+        getCols: function(num) {
+            if (num === 1) {
+                return this.board.filter(board => (board.index === 0 || board.index === 3 || board.index === 6) && board.value !== "")
+            } else if (num === 2) {
+                return this.board.filter(board => (board.index === 1 || board.index === 4 || board.index === 7) && board.value !== "")
+            } else if (num === 3) {
+                return this.board.filter(board => (board.index === 2 || board.index === 5 || board.index === 8) && board.value !== "")
+            }
+        },
+        getDiagonal: function(num) {
+            if (num === 1) {
+                return this.board.filter(board => (board.index === 0 || board.index === 4 || board.index === 8) && board.value !== "")
+            } else if (num === 2) {
+                return this.board.filter(board => (board.index === 2 || board.index === 4 || board.index === 6) && board.value !== "")
+            }
+        },
+        checkBoard: function() {
+            const checkList = [this.getRows(1), this.getRows(2), this.getRows(3), this.getCols(1), this.getCols(2), this.getCols(3), this.getDiagonal(1), this.getDiagonal(2)]
+            for (let i = 0; i < checkList.length; i++) {
+                let result;
+                const checkX = checkList[i].filter(item => item.value === "X")
+                const checkO = checkList[i].filter(item => item.value === "O")
+                if (checkX.length === 3) {
+                    result = "X Wins"
+                    return result
+                } else if (checkO.length === 3) {
+                    result = "O Wins"
+                } else {
+                    result = "Game running"
+                }
+            };
         }
     }
 }
@@ -91,7 +126,14 @@ const runGame = (() => {
     }
 
     const decideGame = function() {
-        console.log(controller.getAllValues())
+        const result = controller.checkBoard()
+        if(result === "X Wins"){
+            console.log("Player 1 Wins")
+        }else if(result === "O Wins"){
+            console.log("Player 2 Wins")
+        }else if(result === "Game running"){
+            console.log("Keep Playn'")
+        }
     }
 
     return {
@@ -102,6 +144,13 @@ const runGame = (() => {
 
 
 runGame.playTurn(0)
+runGame.playTurn(1)
+runGame.playTurn(2)
+runGame.playTurn(3)
+runGame.playTurn(4)
 runGame.playTurn(5)
+runGame.playTurn(6)
+runGame.playTurn(7)
+runGame.playTurn(8)
 runGame.decideGame()
 
