@@ -67,9 +67,8 @@ function gameboard() {
                     return result
                 } else if (checkO.length === 3) {
                     result = "O Wins"
-                } else {
-                    result = "Game running"
-                }
+                    return result
+                } 
             };
         }
     }
@@ -100,7 +99,7 @@ function game() {
             this.turn += 1
         },
         resetTurn: function() {
-            this.turn = 0
+            this.turn = 1
         }
     }
 }
@@ -127,12 +126,17 @@ const runGame = (() => {
 
     const decideGame = function() {
         const result = controller.checkBoard()
-        if(result === "X Wins"){
+        if(result === "X Wins") {
             console.log("Player 1 Wins")
-        }else if(result === "O Wins"){
+            session.resetTurn()
+        } else if (result === "O Wins") {
             console.log("Player 2 Wins")
-        }else if(result === "Game running"){
+            session.resetTurn()
+        } else if (result === "Game running") {
             console.log("Keep Playn'")
+        }else if (session.turn === 10) {
+            console.log("It's a Tie")
+            session.resetTurn()
         }
     }
 
@@ -143,14 +147,16 @@ const runGame = (() => {
 })();
 
 
-runGame.playTurn(0)
-runGame.playTurn(1)
-runGame.playTurn(2)
-runGame.playTurn(3)
 runGame.playTurn(4)
+runGame.decideGame()
+runGame.playTurn(0)
+runGame.decideGame()
+runGame.playTurn(2)
+runGame.decideGame()
+runGame.playTurn(3)
+runGame.decideGame()
 runGame.playTurn(5)
+runGame.decideGame()
 runGame.playTurn(6)
-runGame.playTurn(7)
-runGame.playTurn(8)
 runGame.decideGame()
 
