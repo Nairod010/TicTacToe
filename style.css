@@ -1,16 +1,69 @@
 body{
+    margin: 0;
+}
+
+.container{
+    height: 100vh;
+    width: 100vw;
+    background-color: #4477aa;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.start-page{
+    height: 50%;
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    gap: 20%;
+    justify-content: center;
+    align-items: center;
+}
+
+.input-container{
+    width: 100%;
+    display: flex; 
+    justify-content: space-around;
+}
+
+#run{
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #aaa;
+    font-size: 3rem;
+    background-color: #0ae2ff;
+    border: 5px solid #aaa; 
+    border-radius: 10px;
 }
+
+#run:hover{
+    background-color: #aadd78;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#input-player1, #input-player2{
+    box-sizing: border-box;
+    height: 50px;
+    font-size: 2rem;
+    border: 3px solid black;
+    border-radius: 20px;
+    padding: 5px 10px;
+}
+
+#input-player1:focus, #input-player2:focus{
+    outline: none;
+}
+
+
 
 #box {
     height: 500px;
     width: 500px;
     background-color: white;
     display: grid;
-    grid-template-rows: repeat(3 , calc(500px / 3));
+    grid-template-rows: repeat(3 , calc(500px / 3)); /* try 1fr 1fr 1fr you dumb fuck*/
     grid-template-columns:repeat(3 , calc(500px / 3));
     border: 5px solid black;
     padding: 3px;
@@ -24,3 +77,4 @@ body{
     border: 2px solid grey;
     margin: 2px;
 }
+
