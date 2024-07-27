@@ -263,6 +263,7 @@ const init = (() => {
 
             const controller = init.buildBoard()
             const gameboard = controller.board
+            
             //const session = init.startSession()
             //const player1 = init.summonPlayerOne()
             //const player2 = init.summonPlayerTwo()
@@ -270,44 +271,52 @@ const init = (() => {
             //init.playTurn(0)
             //console.log(gameboard.board[0].getValue())
 
-
             function setBoardCells() {
                 const cellsFragment = document.createDocumentFragment();
                 for (let i = 0; i < gameboard.length; i++) {
                     const cell = document.createElement("div")
-                    cell.setAttribute("class", "cell")
-                    cell.addEventListener("click", () => {
-                    if(!cell.textContent){
-                        cell.textContent = init.playTurn(i);
-                        if(init.decideGame()){
-                            resetBoard()
+                    cell.setAttribute("class", `cell position-${i}`)
+                    const cellEvent = function() {
+                        if (init.decideGame()) {
+                            cell.style.color = "white"
+                            resetBoard();
+                        } else if (!cell.textContent) {
+                            cell.textContent = init.playTurn(i);
+                            cell.setAttribute("class", `cell position-${i} ${cell.textContent}-cell`)
                         }
                     }
-                    });
-                    cellsFragment.appendChild(cell)
+                    cell.addEventListener("click", cellEvent);
 
+                    cellsFragment.appendChild(cell)
                 }
                 return cellsFragment
             }
+
+
+            function resetBoard() {
+                    board.replaceChildren();
+                    const newCells = setBoardCells();
+                    board.appendChild(newCells)
+            };
+
             
-            function resetBoard(){
-                board.replaceChildren();
-                const newCells = setBoardCells();
-                board.appendChild(newCells)
-            }
 
-
-
-
-
+            const resetButton = document.createElement("div")
+            resetButton.setAttribute("id", "reset")
+            resetButton.textContent = "Reset"
+            resetButton.addEventListener("click", () =>{
+                init.resetGame()
+                resetBoard()
+            })
 
             const board = document.createElement("div");
             board.setAttribute("id", "box")
 
             const cellsFragment = setBoardCells()
             board.appendChild(cellsFragment)
-
+            
             container.appendChild(board);
+            container.appendChild(resetButton)
 
         }
 
