@@ -244,10 +244,12 @@ const init = (() => {
 (() => {
     const container = document.createElement("div");
     container.setAttribute("class", "container");
-
+    
 
     document.body.appendChild(container);
     const firstPage = function() {
+        const gameContainer = document.createElement("div");
+        gameContainer.setAttribute("class", "game-container");
 
         function setAttributes(el, attrs) {
             for (let key in attrs) {
@@ -256,6 +258,13 @@ const init = (() => {
         }
 
         function startGame() {
+            const inputOne = document.querySelector("#input-player1")
+            const inputTwo = document.querySelector("#input-player2")
+            const playerOneName = inputOne.value
+            const playerTwoName = inputTwo.value
+
+            console.log(playerOneName)
+            console.log(playerTwoName)
             while (container.firstChild) {
                 container.firstChild.remove();
             }
@@ -263,13 +272,7 @@ const init = (() => {
 
             const controller = init.buildBoard()
             const gameboard = controller.board
-            
-            //const session = init.startSession()
-            //const player1 = init.summonPlayerOne()
-            //const player2 = init.summonPlayerTwo()
-            //console.log(gameboard)
-            //init.playTurn(0)
-            //console.log(gameboard.board[0].getValue())
+
 
             function setBoardCells() {
                 const cellsFragment = document.createDocumentFragment();
@@ -281,8 +284,12 @@ const init = (() => {
                             cell.style.color = "white"
                             resetBoard();
                         } else if (!cell.textContent) {
+                            const info = init.stats()
                             cell.textContent = init.playTurn(i);
                             cell.setAttribute("class", `cell position-${i} ${cell.textContent}-cell`)
+                            displayPlayerOneWins.textContent = `${info.player1Wins}`
+                            displayPlayerTwoWins.textContent = `${info.player2Wins}`
+                            console.log(info)
                         }
                     }
                     cell.addEventListener("click", cellEvent);
@@ -294,20 +301,55 @@ const init = (() => {
 
 
             function resetBoard() {
-                    board.replaceChildren();
-                    const newCells = setBoardCells();
-                    board.appendChild(newCells)
+                board.replaceChildren();
+                const newCells = setBoardCells();
+                board.appendChild(newCells)
             };
 
-            
+
 
             const resetButton = document.createElement("div")
             resetButton.setAttribute("id", "reset")
             resetButton.textContent = "Reset"
-            resetButton.addEventListener("click", () =>{
+            resetButton.addEventListener("click", () => {
                 init.resetGame()
                 resetBoard()
             })
+
+            const displayPlayerOne = document.createElement("div")
+            displayPlayerOne.setAttribute("class", "name-container player-X")
+            if (playerOneName === "") {
+                displayPlayerOne.textContent = "X"
+            } else {
+                displayPlayerOne.textContent = playerOneName;
+            }
+
+
+            const displayPlayerTwo = document.createElement("div")
+            displayPlayerTwo.setAttribute("class", "name-container player-O")
+            displayPlayerTwo.textContent = playerTwoName;
+            if (playerTwoName === ""){
+                displayPlayerTwo.textContent = "O"
+            } else {
+                displayPlayerTwo.textContent = playerTwoName
+            }
+            
+            const playerOneContainer = document.createElement("div")
+            playerOneContainer.setAttribute("class", "player-one-container")
+            const displayPlayerOneWins = document.createElement("div")
+            displayPlayerOneWins.setAttribute("class", "name-container")
+            displayPlayerOneWins.textContent = "0"
+            playerOneContainer.appendChild(displayPlayerOne)
+            playerOneContainer.appendChild(displayPlayerOneWins)
+            
+            const playerTwoContainer = document.createElement("div")
+            playerTwoContainer.setAttribute("class", "player-two-container")
+            const displayPlayerTwoWins = document.createElement("div")
+            displayPlayerTwoWins.setAttribute("class", "name-container")
+            displayPlayerTwoWins.textContent = "0"
+            playerTwoContainer.appendChild(displayPlayerTwo)
+            playerTwoContainer.appendChild(displayPlayerTwoWins)
+
 
             const board = document.createElement("div");
             board.setAttribute("id", "box")
@@ -315,9 +357,21 @@ const init = (() => {
             const cellsFragment = setBoardCells()
             board.appendChild(cellsFragment)
             
-            container.appendChild(board);
-            container.appendChild(resetButton)
+            const playersContainer = document.createElement("div")
+            playersContainer.setAttribute("class", "players-container")
+            playersContainer.appendChild(playerOneContainer)
+            playersContainer.appendChild(playerTwoContainer)
+            
+            
 
+            const topContainer = document.createElement("div")
+            topContainer.setAttribute("class", "top-container")
+            topContainer.appendChild(resetButton)
+
+            gameContainer.appendChild(topContainer);
+            gameContainer.appendChild(board);
+            gameContainer.appendChild(playersContainer)
+            container.appendChild(gameContainer);
         }
 
 
@@ -331,8 +385,8 @@ const init = (() => {
         startPage.setAttribute("class", "start-page");
         runButton.setAttribute("id", "run");
         inputContainer.setAttribute("class", "input-container");
-        setAttributes(playerOneName, { "type": "text", "id": "input-player1", "name": "input-player", "value": "", "placeholder": "Player 1" });
-        setAttributes(playerTwoName, { "type": "text", "id": "input-player2", "name": "input-player", "value": "", "placeholder": "Player 2" });
+        setAttributes(playerOneName, { "type": "text", "id": "input-player1", "name": "input-player", "placeholder": "Player 1" });
+        setAttributes(playerTwoName, { "type": "text", "id": "input-player2", "name": "input-player", "placeholder": "Player 2" });
 
         runButton.textContent = "Start Game";
 

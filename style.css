@@ -28,7 +28,7 @@ body{
 }
 
 #reset{
-    margin-top: 30px;
+    margin: 30px;
     align-self: flex-start;
     justify-self: flex-end;
     padding: 5px; 
@@ -36,6 +36,29 @@ body{
     border: 3px solid black;
     border-radius: 15px;
     background-color: yellow;
+}
+
+.game-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 80vw;
+    
+}
+
+.players-container{
+    margin-top: 50px;
+    width: 500px;
+    display: flex;
+    justify-content: space-evenly;
+
+}
+
+.name-container{
+    margin: 10px;
+    padding: 10px;
+    background-color: #fff;
 }
 
 #run{
