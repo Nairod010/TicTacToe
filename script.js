@@ -173,7 +173,7 @@ const init = (() => {
             session.addCounter()
             controller.resetBoard()
             console.log(controller.board)
-            player1.addWin()
+            player2.addWin()
             console.log(`${player2.name} Wins`)
             return true
         } else if (session.turn === 10) {
@@ -263,8 +263,6 @@ const init = (() => {
             const playerOneName = inputOne.value
             const playerTwoName = inputTwo.value
 
-            console.log(playerOneName)
-            console.log(playerTwoName)
             while (container.firstChild) {
                 container.firstChild.remove();
             }
@@ -281,15 +279,19 @@ const init = (() => {
                     cell.setAttribute("class", `cell position-${i}`)
                     const cellEvent = function() {
                         if (init.decideGame()) {
+                            const info = init.stats()
+                            console.log(info.game)
                             cell.style.color = "white"
+                            displayPlayerOneWins.textContent = `${info.player1Wins}`
+                            displayPlayerTwoWins.textContent = `${info.player2Wins}`
+                            turnContainer.textContent = `Turn: 1`
+                            gameCounter.textContent = `Game: ${info.game}`
                             resetBoard();
                         } else if (!cell.textContent) {
                             const info = init.stats()
                             cell.textContent = init.playTurn(i);
                             cell.setAttribute("class", `cell position-${i} ${cell.textContent}-cell`)
-                            displayPlayerOneWins.textContent = `${info.player1Wins}`
-                            displayPlayerTwoWins.textContent = `${info.player2Wins}`
-                            console.log(info)
+                            turnContainer.textContent = `Turn: ${info.turn}`
                         }
                     }
                     cell.addEventListener("click", cellEvent);
@@ -312,6 +314,10 @@ const init = (() => {
             resetButton.setAttribute("id", "reset")
             resetButton.textContent = "Reset"
             resetButton.addEventListener("click", () => {
+                displayPlayerOneWins.textContent = "0"
+                displayPlayerTwoWins.textContent = "0"
+                turnContainer.textContent = "Turn: 1"
+                gameCounter.textContent = "Game: 1" 
                 init.resetGame()
                 resetBoard()
             })
@@ -361,12 +367,20 @@ const init = (() => {
             playersContainer.setAttribute("class", "players-container")
             playersContainer.appendChild(playerOneContainer)
             playersContainer.appendChild(playerTwoContainer)
-            
-            
+
+            const turnContainer = document.createElement("div")
+            turnContainer.setAttribute("class", "turn-container")
+            turnContainer.textContent = "Turn: 1"
+
+            const gameCounter = document.createElement("div")
+            gameCounter.setAttribute("class", "counter-container")
+            gameCounter.textContent = "Game: 1" 
 
             const topContainer = document.createElement("div")
             topContainer.setAttribute("class", "top-container")
             topContainer.appendChild(resetButton)
+            topContainer.appendChild(turnContainer)
+            topContainer.appendChild(gameCounter)
 
             gameContainer.appendChild(topContainer);
             gameContainer.appendChild(board);
